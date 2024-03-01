@@ -1,0 +1,10 @@
+{
+  "data": {
+    "type": "registry-modules",
+    "attributes": {
+      "name": "function_app",
+      "provider": "azurerm",
+      "registry-name": "private"
+    }
+  }
+}

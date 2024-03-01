@@ -1,0 +1,34 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: TerraformRegistryVariables
+
+jobs:
+  - job: "Terraform_Registry_Publish"
+    steps:
+      - checkout: self
+        displayName: Clean Checkout
+        clean: true
+        
+      - task: Bash@3
+        inputs:
+          filePath: './publish.sh'
+          arguments: '$(TF_ORGANIZATION) $(TERRAFORM_REGISTRY_TOKEN) $(System.DefaultWorkingDirectory)'
+      # - script: |
+      #     curl  --header "Authorization: Bearer $(TERRAFORM_REGISTRY_TOKEN)" --header "Content-Type: application/vnd.api+json" --request POST --data @${{ parameters.JSON_MODULE_LOCATION }}  https://app.terraform.io/api/v2/organizations/$(TF_ORGANIZATION)/registry-modules | jq -r
+      #   displayName: "Terraform Registry Module Creation"
+      #   name: "ModuleCreation"
+
+      # - script: |
+      #     tar cvfz ${{ parameters.MODULE_NAME }}.tar.gz ${{ parameters.TERRAFORM_PACKAGE_LOCATION }}/*
+      #     ls
+      #   displayName: "Terraform Module Package Build"
+      #   name: "PackageBuild"
+      
+      # - script: |
+      #     export version_url="https://app.terraform.io/api/v2/organizations/$(TF_ORGANIZATION)/registry-modules/private/$(TF_ORGANIZATION)/${{ parameters.MODULE_NAME }}/${{ parameters.PROVIDER }}/versions"
+      #     export push_url=$(curl --location {$version_url} --header 'Content-Type: application/vnd.api+json' --header 'Authorization: Bearer $(TERRAFORM_REGISTRY_TOKEN)' --data @${{ parameters.JSON_VERSION_LOCATION }} | jq -r '.data.links.upload')
+      #     curl --location $push_url --request PUT  --header 'Content-Type: application/octet-stream'  --data-binary @${{ parameters.MODULE_NAME}}.tar.gz
+      #   displayName: "Package Push"
+      #   name: "PackagePush"
